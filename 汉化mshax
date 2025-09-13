@@ -1,7 +1,7 @@
 local name = {
     -- 脚本信息
     ["mshax v4"] = "mshax v4",
-    ["No Footer"] = "雷电出品",
+    ["No Footer"] = "雷电出品,测试",
     ["Disable AFK"] = "防挂机检测",
     ["Unlock Padlock Distance"] = "自动挂锁距离",
     ["Automation Library Code"] = "图书馆自动解锁",
@@ -170,7 +170,7 @@ local name = {
     ["设为默认"] = "设为默认",
     ["Reset default"] = "重置默认",
     ["notzanocoddz - W Guy Made Auto Load Config"] = "脚本原作者KardinCat",
-    ["KardinCat - Creator"] = "脚本由雷电汉化",
+    ["KardinCat - Creator"] = "脚本由雷电汉化ᖰ･◡･ᖳ",
     ["bocaj11104 - Made The ESP Library Which  I Use"] = " ",
     ["Right"] = "右侧",
     ["Door"] = "门ESP",
