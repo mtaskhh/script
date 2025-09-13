@@ -1,0 +1,378 @@
+local name = {
+    -- 脚本信息
+    ["mshax v4"] = "mshax v4",
+    ["No Footer"] = "雷电，mt出品",
+    ["Disable AFK"] = "防挂机检测",
+    ["Unlock Padlock Distance"] = "自动挂锁距离(建议开最大)",
+    ["Automation Library Code"] = "图书馆自动解锁(到门锁前拿密码纸",
+    ["Method 1"] = "模式 1",
+    ["Method 2"] = "模式 2",
+    ["Speed Bypass Method"] = "速度绕过模式",
+    ["Ignore List"] = "互动列表",
+    ["Bottom"] = "底部",
+    ["Top"] = "顶部",
+    ["Mouse"] = "鼠标",
+    ["Center"] = "准心",
+    ["Text Size"] = "字体大小",
+    ["Arrows Size"] = "箭头大小",
+    ["Fill Transparency"] = "填充透明度",
+    ["Outline Transparency"] = "轮廓透明度",
+    ["Text Transparency"] = "字体透明度",
+    ["Text Outline Transparency"] = "字体轮廓透明度",
+    ["Anti Seek-Obstructions"] = "防seek追逐战障碍(火，手)",
+    ["Death Farm"] = "自动刷死亡农场",
+    ["Generator ESP"] = "发电机透视",
+    ["Ladder ESP"] = "梯子透视",
+    ["Fuse ESP"] = "保险丝透视",
+    ["Anchor ESP"] = "锚点透视",
+    ["Water Pump ESP"] = "水泵透视",
+    ["Notify Anchor Code"] = "通知锚点代码",
+    ["Remove Figure (FE)"] = "删除Figure(只有自己能看到)",
+    ["Anti Bridge Fall"] = "防桥梁坠落",
+    ["Show Seek Path"] = "Seek追足战路径提示",
+    ["Anticheat Bypass"] = "反作弊绕过",
+    ["Main"] = "主菜单",
+    ["Player"] = "玩家",
+    ["Exploits"] = "漏洞利用",
+    ["Visuals"] = "视觉功能",
+    ["Floor"] = "地板",
+    ["Config"] = "配置",
+    ["Addons"] = "附加组件",
+    ["Miscellaneous"] = "杂项",
+    ["Movement"] = "辅助",
+    ["Camera"] = "视角",
+    ["Fullbright"] = "全亮",
+    ["No Camera Shake"] = "无视角抖动",
+    ["Third Person"] = "第三人称",
+    ["Spectate Entity"] = "观察实体",
+    ["FOV Slider"] = "FOV值",
+    ["FOV"] = "使用FOV值",
+    ["Noclip"] = "穿墙(用另一个)",
+    ["No Closet Exit Delay"] = "快速出柜子",
+    ["Notifying / ESP"] = "通知/透视",
+    ["Reach"] = "范围",
+    ["Instant Interacts"] = "即时交互",
+    ["Prompt Reach"] = "显示范围",
+    ["Prompt Clip"] = "提示穿透",
+    ["Door Reach"] = "开门范围提升",
+    ["Anti Lag"] = "防延迟",
+    ["No Cutscenes"] = "无视过场动画(部分不支持)",
+    ["Reset"] = "重置",
+    ["Play Again"] = "重新开始",
+    ["Lobby"] = "返回大厅",
+    ["Revive"] = "复活（非免费）",
+    ["Inf Lockpick / SkeletonKey"] = "无限撬锁器/骷髅钥匙",
+    ["Inf Shears"] = "无限剪刀",
+    ["Infinite Items"] = "无限物品",
+    ["Speed Boost Slider"] = "移速修改",
+    ["Speed Boost"] = "启用速度(建议40)",
+    ["Fly Speed"] = "飞行速度(建议45)",
+    ["Fly"] = "飞行",
+    ["Enable Jump"] = "启用跳跃",
+    ["Infinite Jump"] = "无限连跳",
+    ["No Acceleration"] = "无加速滑动(没有停止后的滑行)",
+    ["Entitys"] = "实体",
+    ["Bypass"] = "绕过",
+    ["Anti-Dread"] = "防Dread",
+    ["Anti-Screech"] = "防Screech",
+    ["Anti-A90"] = "防A90",
+    ["Anti-Eyes"] = "防Eyes",
+    ["Anti-Snare"] = "防地刺",
+    ["Anti-Dupe"] = "防假门",
+    ["Anti-Figure-Hearing"] = "防Figure听到",
+    ["Anti-Halt"] = "防Halt",
+    ["Automation"] = "自动化",
+    ["Auto Interact"] = "自动互动",
+    ["Auto Heartbeat Minigame"] = "自动心跳游戏",
+    ["Auto Breaker Box"] = "自动电闸盒",
+    ["Auto Closet"] = "自动躲衣柜(不好用)",
+    ["Speed Bypass"] = "速度绕过(必须开)",
+    ["God Mode"] = "无敌模式(开的时候不能跳，不能蹲。)",
+    ["Anti Cheat Manipulation"] = "无拉回穿墙(靠近墙壁后打开，然后关)",
+    ["Settings"] = "设置",
+    ["Enable Tracers"] = "启用追踪线",
+    ["Enable Arrows"] = "启用箭头",
+    ["Enable Show Distances"] = "启用显示距离",
+    ["Enable Rainbow"] = "启用彩虹效果",
+    ["ESP Fade Time"] = "透视特效持续时间",
+    ["ESP Font"] = "透视字体",
+    ["Tracer Origin"] = "追踪线起点",
+    ["Transport"] = "传送",
+    ["Transparency Slider:"] = "透明度滑块:",
+    ["Tracer Size"] = "追踪线大小",
+    ["1/5"] = "1/5",
+    ["Distance Size Ratio"] = "距离大小比例",
+    ["Transparency Closet"] = "衣柜透明度",
+    ["Transparency Cart"] = "推车透明度",
+    ["Transparent"] = "透明",
+    ["Entites Bypass"] = "防特殊绕过",
+    ["Anti Nanner Banana"] = "防香蕉",
+    ["ESP"] = "ESP",
+    ["Timer Lever ESP"] = "计时器杠杆ESP",
+    ["Entities"] = "实体列表",
+    ["Entity Notifys"] = "实体通知(不是聊天框通知)",
+    ["Entities ESP"] = "实体透视",
+    ["Notify Library Code"] = "通知图书馆密码",
+    ["Modifiers"] = "修改器",
+    ["Anti Lookman"] = "防Lookman",
+    ["Anti Fog"] = "防Fog",
+    ["Anti Giggle"] = "防Giggle",
+    ["Anti Jamming"] = "防Jamming",
+    ["Anti Gloom Egg"] = "防Gloom Egg",
+    ["Anti Vacuum"] = "防虚空门",
+    ["Themes"] = "主题",
+    ["Background color"] = "背景颜色",
+    ["Main color"] = "主颜色",
+    ["Accent color"] = "副调色",
+    ["Outline color"] = "轮廓颜色",
+    ["Font color"] = "字体颜色",
+    [".webm Video Background (Link)"] = ".webm视频背景(链接)",
+    ["Theme list"] = "主题列表",
+    ["Default"] = "默认",
+    ["Set as default"] = "设为默认",
+    ["Custom theme name"] = "自定义主题名称",
+    ["Create theme"] = "创建主题",
+    ["UI"] = "UI",
+    ["Fps Unlocker"] = "FPS显示",
+    ["Play Sound"] = "播放声音",
+    ["Notify Side"] = "通知位置",
+    ["Left"] = "左侧",
+    ["Menu bind"] = "菜单绑定",
+    ["Show Keybinds"] = "显示键位",
+    ["Show Custom Cursor"] = "显示自定义光标",
+    ["Unload GUI"] = "卸载GUI",
+    ["Credits"] = "致谢",
+    ["Load Config"] = "加载配置",
+    ["Which I Use"] = "我所使用的",
+    ["Configuration"] = "配置",
+    ["BBot"] = "BBot",
+    ["Facality"] = "Facality",
+    ["Jester"] = "Jester",
+    ["Mint"] = "Mint",
+    ["Tokyo Night"] = "东京之夜",
+    ["Ubuntu"] = "Ubuntu",
+    ["Quartz"] = "Quartz",
+    ["配置"] = "配置",
+    ["Config name"] = "配置名称",
+    ["Create config"] = "创建配置",
+    ["Config list"] = "配置列表",
+    ["Load config"] = "加载配置",
+    ["Overwrite config"] = "覆盖配置",
+    ["Delete config"] = "删除配置",
+    ["Refresh list"] = "刷新列表",
+    ["Set as autoload"] = "设为自动加载",
+    ["Reset autoload"] = "重置自动加载",
+    ["Current autoload config: none"] = "当前自动加载配置: 无",
+    ["Custom themes"] = "自定义主题",
+    ["Load theme"] = "加载主题",
+    ["Overwrite theme"] = "覆盖主题",
+    ["Delete theme"] = "删除主题",
+    ["设为默认"] = "设为默认",
+    ["Reset default"] = "重置默认",
+    ["notzanocoddz - W Guy Made Auto Load Config"] = "脚本原作者KardinCat",
+    ["KardinCat - Creator"] = "脚本由雷电，mt汉化",
+    ["bocaj11104 - Made The ESP Library Which  I Use"] = " ",
+    ["Right"] = "右侧",
+    ["Door"] = "门透视",
+    ["Key"] = "钥匙透视",
+    ["Closet ESP"] = "衣柜透视",
+    ["Gate Lever"] = "铁门杠杆透视",
+    ["Players ESP"] = "玩家透视",
+    ["Books"] = "图书馆-书透视",
+    ["Breaker"] = "断路器透视",
+    ["Items ESP"] = "物品透视",
+    ["Gold ESP"] = "金币透视",
+
+    -- 原始表中的其他条目保持不变
+    ["BlackKing : Loading Gui"] = "BlackKing : 加载Gui中",
+    ["Functions"] = "功能",
+    -- ... (其他原始条目)
+    [""] = ""
+}
+
+local espname = {
+    ["Dupe / Fake Door"] = "Dupe / 假门",
+    ["Lever"] = "拉杆",
+    ["Candle"] = "蜡烛",
+    ["Bandage"] = "绷带",
+    ["Breaker"] = "断路器",
+    ["Shakelight"] = "手摇灯",
+    ["Fuse"] = "保险丝",
+    ["Generator"] = "发电机",
+    ["Glowsticks"] = "荧光棒",
+    ["Locker"] = "柜子",
+    ["Anchor : A"] = "锚点 : A",
+    ["Anchor : B"] = "锚点 : B",
+    ["Anchor : C"] = "锚点 : C",
+    ["Anchor : D"] = "锚点 : D",
+    ["WaterPump"] = "水泵"
+}
+
+local floor = game:GetService("ReplicatedStorage"):WaitForChild("GameData"):WaitForChild("Floor")
+local function main(v)
+    if floor.Value == "Fools" then
+        if v:IsA("TextLabel") or v:IsA("TextButton") then
+            repeat task.wait() until v.Text ~= "Label"
+        end
+    end
+    if v:IsA("TextLabel") then
+        if name[v.Text] then
+            v.Text = name[v.Text]
+        elseif v.Text == "Speed Boost : 6" then
+            v.Text = "速度提升 : 6"
+            v:GetPropertyChangedSignal("Text"):Connect(function()
+                textnumber = string.match(v.Text, "Speed Boost : (%w+)")
+                if textnumber then
+                    v.Text = "速度提升 : "..textnumber
+                end
+            end)
+        elseif v.Text == "Max Slope Angle : 49" then
+            v.Text = "最大倾斜角 : 49"
+            v:GetPropertyChangedSignal("Text"):Connect(function()
+                textnumber = string.match(v.Text, "Max Slope Angle : (%w+)")
+                if textnumber then
+                    v.Text = "最大倾斜角 : "..textnumber
+                end
+            end)
+        elseif v.Text == "Field of View : 70" then
+            v.Text = "视野 : 70"
+            v:GetPropertyChangedSignal("Text"):Connect(function()
+                textnumber = string.match(v.Text, "Field of View : (%w+)")
+                if textnumber then
+                    v.Text = "视野 : "..textnumber
+                end
+            end)
+        elseif v.Text == "DistanceZoom : 10" then
+            v.Text = "缩放距离 : 10"
+            v:GetPropertyChangedSignal("Text"):Connect(function()
+                textnumber = string.match(v.Text, "DistanceZoom : (%w+)")
+                if textnumber then
+                    v.Text = "缩放距离 : "..textnumber
+                end
+            end)
+        elseif v.Text == "Max Interact Distance : 14.5" then
+            v.Text = "最大交互距离 : 14.5"
+            v:GetPropertyChangedSignal("Text"):Connect(function()
+                textnumber = string.match(v.Text, "Max Interact Distance : (%w+.%w+)") or string.match(v.Text, "Max Interact Distance : (%w+)")
+                if textnumber then
+                    v.Text = "最大交互距离 : "..textnumber
+                end
+            end)
+        elseif v.Text == "Auto Hide Delay : 1" then
+            v.Text = "自动隐藏延迟 : 1"
+            v:GetPropertyChangedSignal("Text"):Connect(function()
+                textnumber = string.match(v.Text, "Auto Hide Delay : (%w+.%w+)") or string.match(v.Text, "Auto Hide Delay : (%w+)")
+                if textnumber then
+                    v.Text = "自动隐藏延迟 : "..textnumber
+                end
+            end)
+        elseif v.Text == "Number of items: 1" then
+            v.Text = "物品数量 : 1"
+            v:GetPropertyChangedSignal("Text"):Connect(function()
+                textnumber = string.match(v.Text, "Number of items: (%w+)")
+                if textnumber then
+                    v.Text = "物品数量 : "..textnumber
+                end
+            end)
+        elseif v.Text == "FillTransparency : 0.9" then
+            v.Text = "填充透明度 : 0.9"
+            v:GetPropertyChangedSignal("Text"):Connect(function()
+                textnumber = string.match(v.Text, "FillTransparency : (%w+.%w+)") or string.match(v.Text, "FillTransparency : (%w+)")
+                if textnumber then
+                    v.Text = "填充透明度 : "..textnumber
+                end
+            end)
+        elseif v.Text == "OutlineTransparency : 0" then
+            v.Text = "边框透明度 : 0"
+            v:GetPropertyChangedSignal("Text"):Connect(function()
+                textnumbe= string.match(v.Text, "OutlineTransparency : (%w+.%w+)") or string.match(v.Text, "OutlineTransparency : (%w+)")
+                if textnumber then
+                    v.Text = "边框透明度 : "..textnumber
+                end
+            end)
+        elseif v.Text == "Time : 5" then
+            v.Text = "时间 : 5"
+            v:GetPropertyChangedSignal("Text"):Connect(function()
+                textnumber = string.match(v.Text, "Time : (%w+)")
+                if textnumber then
+                    v.Text = "时间 : "..textnumber
+                end
+            end)
+        elseif v.Text == "Volume : 5" then
+            v.Text = "音量 : 5"
+            v:GetPropertyChangedSignal("Text"):Connect(function()
+                textnumber = string.match(v.Text, "Volume : (%w+)")
+                if textnumber then
+                    v.Text = "音量 : "..textnumber
+                end
+            end)
+        elseif v.Text == "Teleport Delay : 0.5" then
+            v.Text = "传送延迟 : 0.5"
+            v:GetPropertyChangedSignal("Text"):Connect(function()
+                textnumber = string.match(v.Text, "Teleport Delay : (%w+.%w+)") or string.match(v.Text, "Teleport Delay : (%w+)")
+                if textnumber then
+                    v.Text = "传送延迟 : "..textnumber
+                end
+            end)
+        elseif v.Text == "Drop Delay : 0.25" then
+            v.Text = "丢弃延迟 : 0.25"
+            v:GetPropertyChangedSignal("Text"):Connect(function()
+                textnumber = string.match(v.Text, "Drop Delay : (%w+.%w+)") or string.match(v.Text, "Drop Delay : (%w+)")
+                if textnumber then
+                    v.Text = "丢弃延迟 : "..textnumber
+                end
+            end)
+        elseif v.Text == "LoopDelay : 0" then
+            v.Text = "循环延迟 : 0"
+            v:GetPropertyChangedSignal("Text"):Connect(function()
+                textnumber = string.match(v.Text, "LoopDelay : (%w+.%w+)") or string.match(v.Text, "LoopDelay : (%w+)")
+                if textnumber then
+                    v.Text = "循环延迟 : "..textnumber
+                end
+            end)
+        elseif v.Text == "MaxPlayers : 12" then
+            v.Text = "最大玩家 : 12"
+            v:GetPropertyChangedSignal("Text"):Connect(function()
+                textnumber = string.match(v.Text, "MaxPlayers : (%w+)")
+                if textnumber then
+                    v.Text = "最大玩家 : "..textnumber
+                end
+            end)
+        elseif v.Text == "TextSize : 20" then
+            v.Text = "文本大小 : 20"
+            v:GetPropertyChangedSignal("Text"):Connect(function()
+                textnumber = string.match(v.Text, "TextSize : (%w+)")
+                if textnumber then
+                    v.Text = "文本大小 : "..textnumber
+                end
+            end)
+        elseif v.Text == "Done Anchor Solver Loop : 4" then
+            v.Text = "完成锚点解决器循环 : 4"
+            v:GetPropertyChangedSignal("Text"):Connect(function()
+                textnumber = string.match(v.Text, "Done Anchor Solver Loop : (%w+)")
+                if textnumber then
+                    v.Text = "完成锚点解决器循环 : "..textnumber
+                end
+            end)
+        else
+            --appendfile("1.txt", v.Text.."\n\n")
+        end
+    end
+    if v:IsA("TextButton") then
+        if v.Text == "Toggle UI" then
+            v.Text = "隐藏/打开"
+        elseif v.Text == "Lock UI" then
+            v.Text = "锁定位置"
+        end
+    end
+end
+Connect = gethui().DescendantAdded:Connect(function(child)
+    if child.Name == "BlackkingGui" then
+        Connect:Disconnect()
+        child.DescendantAdded:Connect(main)
+    end
+end)
+
+task.wait()
+getgenv().LibraryIs = "Linoria" -- or Linoria  
+loadstring(game:HttpGet("https://raw.githubusercontent.com/TheHunterSolo1/Scripts/main/ProhaxV4"))()
