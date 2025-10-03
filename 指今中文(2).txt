@@ -1,19 +1,5 @@
-local CoreGui = game:GetService("StarterGui")
-CoreGui:SetCore("SendNotification", {
-    Title = "嘿bro！",
-    Text = "iy中文bro",
-    Duration = 5,
-})
-
-local CoreGui = game:GetService("StarterGui")
-CoreGui:SetCore("SendNotification", {
-    Title = "没什么",
-    Text = "等着吧",
-    Duration = 2,
-})
 
 game:GetService("StarterGui")
-wait(1)
 
 local OrionLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Wangzhehaoh/fly-away/main/%E5%90%AF%E5%8A%A8%E5%BA%93.lua"))()
 
