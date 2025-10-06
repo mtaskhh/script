@@ -1,0 +1,7 @@
+-- 不准看🚫😠
+while true do
+    game.Players.LocalPlayer.Character.Humanoid.Health = 0
+    wait(0.1)  
+    game.Players.LocalPlayer.Character.Humanoid.Health = 1
+    wait(0.1)
+end
