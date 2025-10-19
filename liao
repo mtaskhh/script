@@ -1,0 +1,731 @@
+-- 本地聊天UI脚本 (最终优化版)
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TextService = game:GetService("TextService")
+local TweenService = game:GetService("TweenService")
+local StarterGui = game:GetService("StarterGui")
+local HttpService = game:GetService("HttpService")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+
+-- 创建主屏幕GUI
+local ChatUI = Instance.new("ScreenGui")
+ChatUI.Name = "GaoHubChatUI"
+ChatUI.ResetOnSpawn = false
+ChatUI.Parent = PlayerGui
+
+-- 创建主框架 (带圆角)
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.Size = UDim2.new(0.3, 0, 0.5, 0)
+MainFrame.Position = UDim2.new(0.35, 0, 0.25, 0) -- 默认居中
+MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+MainFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+MainFrame.BackgroundTransparency = 0.3
+MainFrame.BorderSizePixel = 0
+MainFrame.ClipsDescendants = true
+
+-- 添加圆角
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0.03, 0)
+UICorner.Parent = MainFrame
+
+MainFrame.Parent = ChatUI
+
+-- 创建独立的隐藏/显示按钮 (可拖动)
+local HideButton = Instance.new("TextButton")
+HideButton.Name = "HideButton"
+HideButton.Size = UDim2.new(0.05, 0, 0.08, 0)
+HideButton.Position = UDim2.new(0.01, 0, 0.25, 0)
+HideButton.AnchorPoint = Vector2.new(0, 0.5)
+HideButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+HideButton.Text = ">"
+HideButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+HideButton.Font = Enum.Font.SourceSansBold
+HideButton.TextSize = 18
+HideButton.Parent = ChatUI
+
+-- 为隐藏按钮添加圆角
+local HideButtonCorner = Instance.new("UICorner")
+HideButtonCorner.CornerRadius = UDim.new(0.03, 0)
+HideButtonCorner.Parent = HideButton
+
+-- 创建标题栏 (拖动区域)
+local TitleBar = Instance.new("Frame")
+TitleBar.Name = "TitleBar"
+TitleBar.Size = UDim2.new(1, 0, 0.08, 0)
+TitleBar.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+TitleBar.BorderSizePixel = 0
+TitleBar.Parent = MainFrame
+
+-- 标题文本
+local TitleText = Instance.new("TextLabel")
+TitleText.Name = "TitleText"
+TitleText.Size = UDim2.new(0.7, 0, 1, 0)
+TitleText.Position = UDim2.new(0.15, 0, 0, 0)
+TitleText.BackgroundTransparency = 1
+TitleText.Text = "Gao Hub 聊天记录器"
+TitleText.TextColor3 = Color3.fromRGB(255, 255, 255)
+TitleText.Font = Enum.Font.SourceSansBold
+TitleText.TextSize = 18
+TitleText.Parent = TitleBar
+
+-- 聊天内容滚动框
+local ChatScroller = Instance.new("ScrollingFrame")
+ChatScroller.Name = "ChatScroller"
+ChatScroller.Size = UDim2.new(1, -10, 0.7, -10)
+ChatScroller.Position = UDim2.new(0, 5, 0.08, 5)
+ChatScroller.BackgroundTransparency = 1
+ChatScroller.BorderSizePixel = 0
+ChatScroller.ScrollBarThickness = 5
+ChatScroller.AutomaticCanvasSize = Enum.AutomaticSize.Y
+ChatScroller.CanvasSize = UDim2.new(0, 0, 0, 0)
+ChatScroller.ScrollingDirection = Enum.ScrollingDirection.Y
+ChatScroller.Parent = MainFrame
+
+-- 聊天内容布局
+local ChatLayout = Instance.new("UIListLayout")
+ChatLayout.Name = "ChatLayout"
+ChatLayout.Padding = UDim.new(0, 10)
+ChatLayout.SortOrder = Enum.SortOrder.LayoutOrder
+ChatLayout.Parent = ChatScroller
+
+-- 底部控制区域
+local ControlPanel = Instance.new("Frame")
+ControlPanel.Name = "ControlPanel"
+ControlPanel.Size = UDim2.new(1, -10, 0.12, 0)
+ControlPanel.Position = UDim2.new(0, 5, 0.8, 0)
+ControlPanel.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+ControlPanel.BorderSizePixel = 0
+ControlPanel.Parent = MainFrame
+
+-- 关闭按钮
+local CloseButton = Instance.new("TextButton")
+CloseButton.Name = "CloseButton"
+CloseButton.Size = UDim2.new(0.4, 0, 0.7, 0)
+CloseButton.Position = UDim2.new(0.05, 0, 0.15, 0)
+CloseButton.BackgroundColor3 = Color3.fromRGB(215, 60, 0)
+CloseButton.BorderSizePixel = 0
+CloseButton.Text = "关闭"
+CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseButton.Font = Enum.Font.SourceSansBold
+CloseButton.TextSize = 16
+CloseButton.Parent = ControlPanel
+
+-- 通知开关按钮
+local NotifyButton = Instance.new("TextButton")
+NotifyButton.Name = "NotifyButton"
+NotifyButton.Size = UDim2.new(0.4, 0, 0.7, 0)
+NotifyButton.Position = UDim2.new(0.55, 0, 0.15, 0)
+NotifyButton.BackgroundColor3 = Color3.fromRGB(0, 120, 215)
+NotifyButton.BorderSizePixel = 0
+NotifyButton.Text = "通知: 开"
+NotifyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+NotifyButton.Font = Enum.Font.SourceSansBold
+NotifyButton.TextSize = 16
+NotifyButton.Parent = ControlPanel
+
+-- 右侧发送消息区域
+local SendPanel = Instance.new("Frame")
+SendPanel.Name = "SendPanel"
+SendPanel.Size = UDim2.new(0.25, 0, 0.5, 0)
+SendPanel.Position = UDim2.new(0.7, 10, 0.25, 0)
+SendPanel.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+SendPanel.BackgroundTransparency = 0.3
+SendPanel.BorderSizePixel = 0
+SendPanel.Parent = ChatUI
+
+-- 添加圆角
+local SendPanelCorner = Instance.new("UICorner")
+SendPanelCorner.CornerRadius = UDim.new(0.03, 0)
+SendPanelCorner.Parent = SendPanel
+
+-- 发送消息标题
+local SendTitle = Instance.new("TextLabel")
+SendTitle.Name = "SendTitle"
+SendTitle.Size = UDim2.new(1, 0, 0.1, 0)
+SendTitle.BackgroundTransparency = 1
+SendTitle.Text = "发送消息"
+SendTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+SendTitle.Font = Enum.Font.SourceSansBold
+SendTitle.TextSize = 18
+SendTitle.Parent = SendPanel
+
+-- 消息输入框
+local MessageInput = Instance.new("TextBox")
+MessageInput.Name = "MessageInput"
+MessageInput.Size = UDim2.new(0.9, 0, 0.6, 0)
+MessageInput.Position = UDim2.new(0.05, 0, 0.15, 0)
+MessageInput.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+MessageInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+MessageInput.Font = Enum.Font.SourceSans
+MessageInput.TextSize = 16
+MessageInput.TextWrapped = true
+MessageInput.PlaceholderText = "输入消息..."
+MessageInput.ClearTextOnFocus = false
+MessageInput.Text = ""
+MessageInput.Parent = SendPanel
+
+-- 发送按钮
+local SendButton = Instance.new("TextButton")
+SendButton.Name = "SendButton"
+SendButton.Size = UDim2.new(0.9, 0, 0.2, 0)
+SendButton.Position = UDim2.new(0.05, 0, 0.8, 0)
+SendButton.BackgroundColor3 = Color3.fromRGB(0, 120, 215)
+SendButton.BorderSizePixel = 0
+SendButton.Text = "发送"
+SendButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+SendButton.Font = Enum.Font.SourceSansBold
+SendButton.TextSize = 16
+SendButton.Parent = SendPanel
+
+-- 状态变量
+local isChatEnabled = true
+local isVisible = true
+local notificationsEnabled = true
+local soundId = "rbxassetid://2865227271"
+local isDragging = false
+local isHideButtonDragging = false
+local dragStartPos, frameStartPos, hideButtonStartPos
+local activeNotifications = {}
+
+-- 创建通知声音
+local sound = Instance.new("Sound")
+sound.SoundId = soundId
+sound.Parent = ChatUI
+
+-- 缓存玩家头像和昵称
+local avatarCache = {}
+local displayNameCache = {}
+
+-- 获取玩家显示名称
+local function GetPlayerDisplayName(userId)
+    if displayNameCache[userId] then
+        return displayNameCache[userId]
+    end
+    
+    local player = Players:GetPlayerByUserId(userId)
+    if player then
+        displayNameCache[userId] = player.DisplayName
+        return player.DisplayName
+    end
+    return ""
+end
+
+-- 获取玩家头像函数
+local function GetPlayerAvatar(userId)
+    if avatarCache[userId] then
+        return avatarCache[userId]
+    end
+    
+    local success, result = pcall(function()
+        return Players:GetUserThumbnailAsync(userId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size100x100)
+    end)
+    
+    if success then
+        avatarCache[userId] = result
+        return result
+    else
+        return "rbxassetid://0" -- 默认头像
+    end
+end
+
+-- 修复后的按钮动画效果 (不会改变实际尺寸)
+local function AnimateButton(button)
+    local originalSize = button.Size
+    local originalPos = button.Position
+    
+    -- 创建缩放动画
+    local scaleUp = TweenService:Create(button, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        Size = originalSize * 1.05,
+        Position = originalPos - UDim2.new(0.025, 0, 0.025, 0)
+    })
+    
+    local scaleDown = TweenService:Create(button, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        Size = originalSize,
+        Position = originalPos
+    })
+    
+    scaleUp:Play()
+    scaleUp.Completed:Connect(function()
+        scaleDown:Play()
+    end)
+end
+
+-- 为所有按钮添加动画
+for _, button in pairs({CloseButton, NotifyButton, SendButton, HideButton}) do
+    button.MouseButton1Click:Connect(function()
+        AnimateButton(button)
+    end)
+end
+
+-- 主窗口拖动功能
+local function StartDrag(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        isDragging = true
+        dragStartPos = Vector2.new(input.Position.X, input.Position.Y)
+        frameStartPos = Vector2.new(MainFrame.Position.X.Offset, MainFrame.Position.Y.Offset)
+        
+        -- 改变光标样式
+        local dragConnection
+        dragConnection = input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                isDragging = false
+                dragConnection:Disconnect()
+            end
+        end)
+    end
+end
+
+local function UpdateDrag(input)
+    if isDragging then
+        local delta = Vector2.new(input.Position.X, input.Position.Y) - dragStartPos
+        local newPos = frameStartPos + delta
+        
+        -- 限制在屏幕范围内
+        local viewportSize = workspace.CurrentCamera.ViewportSize
+        local frameSize = MainFrame.AbsoluteSize
+        
+        newPos = Vector2.new(
+            math.clamp(newPos.X, 0, viewportSize.X - frameSize.X),
+            math.clamp(newPos.Y, 0, viewportSize.Y - frameSize.Y)
+        )
+        
+        MainFrame.Position = UDim2.new(0, newPos.X, 0, newPos.Y)
+    end
+end
+
+-- 隐藏按钮拖动功能
+local function StartHideButtonDrag(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        isHideButtonDragging = true
+        dragStartPos = Vector2.new(input.Position.X, input.Position.Y)
+        hideButtonStartPos = Vector2.new(HideButton.Position.X.Offset, HideButton.Position.Y.Offset)
+        
+        -- 改变光标样式
+        local dragConnection
+        dragConnection = input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                isHideButtonDragging = false
+                dragConnection:Disconnect()
+            end
+        end)
+    end
+end
+
+local function UpdateHideButtonDrag(input)
+    if isHideButtonDragging then
+        local delta = Vector2.new(input.Position.X, input.Position.Y) - dragStartPos
+        local newPos = hideButtonStartPos + delta
+        
+        -- 限制在屏幕范围内
+        local viewportSize = workspace.CurrentCamera.ViewportSize
+        local buttonSize = HideButton.AbsoluteSize
+        
+        newPos = Vector2.new(
+            math.clamp(newPos.X, 0, viewportSize.X - buttonSize.X),
+            math.clamp(newPos.Y, 0, viewportSize.Y - buttonSize.Y)
+        )
+        
+        HideButton.Position = UDim2.new(0, newPos.X, 0, newPos.Y)
+    end
+end
+
+-- 设置拖动事件
+TitleBar.InputBegan:Connect(StartDrag)
+HideButton.InputBegan:Connect(StartHideButtonDrag)
+
+UserInputService.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        UpdateDrag(input)
+        UpdateHideButtonDrag(input)
+    end
+end)
+
+-- 隐藏/显示界面 (同时隐藏两个窗口)
+local function ToggleVisibility()
+    isVisible = not isVisible
+    
+    local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut)
+    
+    if isVisible then
+        -- 显示界面
+        HideButton.Text = ">"
+        local tweenMain = TweenService:Create(MainFrame, tweenInfo, {
+            BackgroundTransparency = 0.3,
+            Size = UDim2.new(0.3, 0, 0.5, 0)
+        })
+        local tweenSend = TweenService:Create(SendPanel, tweenInfo, {
+            BackgroundTransparency = 0.3,
+            Size = UDim2.new(0.25, 0, 0.5, 0)
+        })
+        tweenMain:Play()
+        tweenSend:Play()
+        ChatScroller.Visible = true
+        ControlPanel.Visible = true
+        TitleText.Visible = true
+        SendPanel.Visible = true
+    else
+        -- 隐藏界面
+        HideButton.Text = "<"
+        local tweenMain = TweenService:Create(MainFrame, tweenInfo, {
+            BackgroundTransparency = 1,
+            Size = UDim2.new(0.05, 0, 0.08, 0)
+        })
+        local tweenSend = TweenService:Create(SendPanel, tweenInfo, {
+            BackgroundTransparency = 1,
+            Size = UDim2.new(0.05, 0, 0.08, 0)
+        })
+        tweenMain:Play()
+        tweenSend:Play()
+        ChatScroller.Visible = false
+        ControlPanel.Visible = false
+        TitleText.Visible = false
+        SendPanel.Visible = false
+    end
+end
+
+HideButton.MouseButton1Click:Connect(function()
+    if not isHideButtonDragging then -- 只有点击时才触发，拖动时不触发
+        ToggleVisibility()
+    end
+end)
+
+-- 添加消息到聊天框 (自动调整大小)
+local function AddMessageToChat(playerName, message, playerUserId)
+    -- 获取显示名称
+    local displayName = GetPlayerDisplayName(playerUserId)
+    local nameWithDisplay = playerName
+    if displayName ~= "" and displayName ~= playerName then
+        nameWithDisplay = playerName .. " (" .. displayName .. ")"
+    end
+    
+    -- 创建消息容器
+    local messageFrame = Instance.new("Frame")
+    messageFrame.Name = "MessageFrame"
+    messageFrame.Size = UDim2.new(1, -10, 0, 0)
+    messageFrame.AutomaticSize = Enum.AutomaticSize.Y
+    messageFrame.BackgroundTransparency = 1
+    messageFrame.LayoutOrder = #ChatScroller:GetChildren()
+    messageFrame.Parent = ChatScroller
+    
+    -- 获取并显示头像
+    local avatar = GetPlayerAvatar(playerUserId)
+    
+    local avatarImage = Instance.new("ImageLabel")
+    avatarImage.Name = "Avatar"
+    avatarImage.Size = UDim2.new(0.1, 0, 0.1, 0)
+    avatarImage.Position = UDim2.new(0, 0, 0, 0)
+    avatarImage.BackgroundTransparency = 1
+    avatarImage.Image = avatar
+    avatarImage.Parent = messageFrame
+    
+    -- 创建用户名标签
+    local nameLabel = Instance.new("TextLabel")
+    nameLabel.Name = "NameLabel"
+    nameLabel.Size = UDim2.new(0.8, 0, 0.1, 0)
+    nameLabel.Position = UDim2.new(0.12, 0, 0, 0)
+    nameLabel.BackgroundTransparency = 1
+    nameLabel.Text = nameWithDisplay
+    nameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    nameLabel.Font = Enum.Font.SourceSansBold
+    nameLabel.TextSize = 14
+    nameLabel.TextXAlignment = Enum.TextXAlignment.Left
+    nameLabel.Parent = messageFrame
+    
+    -- 创建消息标签
+    local messageLabel = Instance.new("TextLabel")
+    messageLabel.Name = "MessageLabel"
+    messageLabel.Size = UDim2.new(0.8, 0, 0, 0)
+    messageLabel.Position = UDim2.new(0.12, 0, 0.1, 0)
+    messageLabel.BackgroundTransparency = 1
+    messageLabel.Text = message
+    messageLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
+    messageLabel.Font = Enum.Font.SourceSans
+    messageLabel.TextSize = 14
+    messageLabel.TextXAlignment = Enum.TextXAlignment.Left
+    messageLabel.TextYAlignment = Enum.TextYAlignment.Top
+    messageLabel.TextWrapped = true
+    messageLabel.AutomaticSize = Enum.AutomaticSize.Y
+    messageLabel.Parent = messageFrame
+    
+    -- 自动调整聊天框大小
+    local function UpdateChatSize()
+        local totalHeight = 0
+        for _, child in ipairs(ChatScroller:GetChildren()) do
+            if child:IsA("Frame") then
+                totalHeight = totalHeight + child.AbsoluteSize.Y + ChatLayout.Padding.Offset
+            end
+        end
+        
+        -- 确保聊天框不会无限增大
+        local maxHeight = workspace.CurrentCamera.ViewportSize.Y * 0.7
+        ChatScroller.CanvasSize = UDim2.new(0, 0, 0, math.min(totalHeight, maxHeight))
+        
+        -- 自动滚动到底部
+        task.wait()
+        ChatScroller.CanvasPosition = Vector2.new(0, ChatScroller.AbsoluteCanvasSize.Y)
+    end
+    
+    -- 监听消息标签尺寸变化
+    messageLabel:GetPropertyChangedSignal("AbsoluteSize"):Connect(UpdateChatSize)
+    UpdateChatSize()
+end
+
+-- 关闭确认函数 (销毁所有界面元素)
+local function RequestClose()
+    -- 显示确认通知
+    StarterGui:SetCore("SendNotification", {
+        Title = "关闭聊天界面",
+        Text = "是否要关闭Gao Hub聊天记录器? (12秒后自动取消)",
+        Duration = 12,
+        Button1 = "是",
+        Button2 = "否",
+        Callback = function(choice)
+            if choice == 1 then -- 点击"是"
+                -- 销毁所有界面元素
+                ChatUI:Destroy()
+                SendPanel:Destroy()
+                
+                -- 清理所有通知
+                for notifGui, _ in pairs(activeNotifications) do
+                    notifGui:Destroy()
+                end
+            end
+        end
+    })
+    
+    -- 播放声音
+    sound:Play()
+end
+
+CloseButton.MouseButton1Click:Connect(RequestClose)
+
+-- 切换通知状态
+local function ToggleNotifications()
+    notificationsEnabled = not notificationsEnabled
+    
+    if notificationsEnabled then
+        NotifyButton.Text = "通知: 开"
+        NotifyButton.BackgroundColor3 = Color3.fromRGB(0, 120, 215)
+    else
+        NotifyButton.Text = "通知: 关"
+        NotifyButton.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+    end
+end
+
+NotifyButton.MouseButton1Click:Connect(ToggleNotifications)
+
+-- 显示带头像的通知 (带进度条)
+local function ShowAvatarNotification(playerName, message, playerUserId)
+    if not notificationsEnabled then return end
+    
+    -- 获取显示名称
+    local displayName = GetPlayerDisplayName(playerUserId)
+    local nameWithDisplay = playerName
+    if displayName ~= "" and displayName ~= playerName then
+        nameWithDisplay = playerName .. " (" .. displayName .. ")"
+    end
+    
+    -- 获取头像
+    local avatar = GetPlayerAvatar(playerUserId)
+    
+    -- 创建自定义通知GUI
+    local notificationGui = Instance.new("ScreenGui")
+    notificationGui.Name = "ChatNotification_" .. playerUserId .. "_" .. tick()
+    notificationGui.ResetOnSpawn = false
+    notificationGui.Parent = PlayerGui
+    
+    local notificationFrame = Instance.new("Frame")
+    notificationFrame.Name = "NotificationFrame"
+    notificationFrame.Size = UDim2.new(0.3, 0, 0.1, 0)
+    
+    -- 计算位置 (防止重叠)
+    local yOffset = 0
+    for _, notif in pairs(activeNotifications) do
+        yOffset = yOffset + notif.Size.Y.Offset + 5
+    end
+    notificationFrame.Position = UDim2.new(0.35, 0, 0, yOffset + 5)
+    
+    notificationFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    notificationFrame.BackgroundTransparency = 0.2
+    notificationFrame.BorderSizePixel = 0
+    notificationFrame.Parent = notificationGui
+    
+    -- 添加圆角
+    local notifCorner = Instance.new("UICorner")
+    notifCorner.CornerRadius = UDim.new(0.03, 0)
+    notifCorner.Parent = notificationFrame
+    
+    local avatarImage = Instance.new("ImageLabel")
+    avatarImage.Name = "Avatar"
+    avatarImage.Size = UDim2.new(0.15, 0, 0.8, 0)
+    avatarImage.Position = UDim2.new(0.02, 0, 0.1, 0)
+    avatarImage.BackgroundTransparency = 1
+    avatarImage.Image = avatar
+    avatarImage.Parent = notificationFrame
+    
+    local nameLabel = Instance.new("TextLabel")
+    nameLabel.Name = "NameLabel"
+    nameLabel.Size = UDim2.new(0.6, 0, 0.3, 0)
+    nameLabel.Position = UDim2.new(0.2, 0, 0.1, 0)
+    nameLabel.BackgroundTransparency = 1
+    nameLabel.Text = nameWithDisplay
+    nameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    nameLabel.Font = Enum.Font.SourceSansBold
+    nameLabel.TextSize = 14
+    nameLabel.TextXAlignment = Enum.TextXAlignment.Left
+    nameLabel.Parent = notificationFrame
+    
+    local messageLabel = Instance.new("TextLabel")
+    messageLabel.Name = "MessageLabel"
+    messageLabel.Size = UDim2.new(0.75, 0, 0.5, 0)
+    messageLabel.Position = UDim2.new(0.2, 0, 0.4, 0)
+    messageLabel.BackgroundTransparency = 1
+    messageLabel.Text = message
+    messageLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
+    messageLabel.Font = Enum.Font.SourceSans
+    messageLabel.TextSize = 14
+    messageLabel.TextXAlignment = Enum.TextXAlignment.Left
+    messageLabel.TextYAlignment = Enum.TextYAlignment.Top
+    messageLabel.TextWrapped = true
+    messageLabel.Parent = notificationFrame
+    
+    -- 进度条背景
+    local progressBarBg = Instance.new("Frame")
+    progressBarBg.Name = "ProgressBarBg"
+    progressBarBg.Size = UDim2.new(1, 0, 0.05, 0)
+    progressBarBg.Position = UDim2.new(0, 0, 0.95, 0)
+    progressBarBg.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+    progressBarBg.BorderSizePixel = 0
+    progressBarBg.Parent = notificationFrame
+    
+    -- 进度条
+    local progressBar = Instance.new("Frame")
+    progressBar.Name = "ProgressBar"
+    progressBar.Size = UDim2.new(1, 0, 1, 0)
+    progressBar.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+    progressBar.BorderSizePixel = 0
+    progressBar.Parent = progressBarBg
+    
+    -- 添加到活动通知列表
+    activeNotifications[notificationGui] = notificationFrame
+    
+    -- 播放声音
+    sound:Play()
+    
+    -- 进度条动画
+    local duration = 5 -- 5秒消失
+    local startTime = tick()
+    
+    local connection
+    connection = RunService.Heartbeat:Connect(function()
+        local elapsed = tick() - startTime
+        local progress = 1 - (elapsed / duration)
+        
+        if progress <= 0 then
+            connection:Disconnect()
+            notificationGui:Destroy()
+            activeNotifications[notificationGui] = nil
+        else
+            progressBar.Size = UDim2.new(progress, 0, 1, 0)
+        end
+    end)
+end
+
+-- 发送消息函数 (确保真正发送到游戏聊天)
+local function SendMessage()
+    local message = MessageInput.Text
+    if message == "" then return end
+    
+    -- 尝试使用官方聊天系统
+    local success, errorMsg = pcall(function()
+        -- 方法1: 使用官方聊天服务
+        game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(message, "All")
+        
+        -- 方法2: 如果方法1失败，尝试备用方法
+        if not success then
+            game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.OnMessageDoneFiltering.OnClientEvent:Wait()
+            LocalPlayer.Chatted:Fire(message)
+        end
+        
+        -- 添加到本地聊天框
+        AddMessageToChat(LocalPlayer.Name, message, LocalPlayer.UserId)
+        MessageInput.Text = ""
+    end)
+    
+    if not success then
+        warn("官方聊天系统发送失败:", errorMsg)
+        
+        -- 如果官方方法失败，使用最基础的Chatted事件
+        pcall(function()
+            LocalPlayer.Chatted:Fire(message)
+            AddMessageToChat(LocalPlayer.Name, message, LocalPlayer.UserId)
+            MessageInput.Text = ""
+        end)
+    end
+end
+
+-- 设置发送按钮事件
+SendButton.MouseButton1Click:Connect(SendMessage)
+
+-- 回车键发送
+MessageInput.FocusLost:Connect(function(enterPressed)
+    if enterPressed then
+        SendMessage()
+    end
+end)
+
+-- 监听聊天消息
+local function OnChatMessage(message, speaker)
+    -- 添加到聊天框
+    AddMessageToChat(speaker.Name, message, speaker.UserId)
+    
+    -- 显示带头像的通知
+    ShowAvatarNotification(speaker.Name, message, speaker.UserId)
+end
+
+-- 监听玩家聊天
+local function SetupPlayerChat(player)
+    player.Chatted:Connect(function(message)
+        OnChatMessage(message, player)
+    end)
+end
+
+-- 为已存在的玩家设置监听
+for _, player in ipairs(Players:GetPlayers()) do
+    if player ~= LocalPlayer then
+        SetupPlayerChat(player)
+    end
+end
+
+-- 为新玩家设置监听
+Players.PlayerAdded:Connect(function(player)
+    SetupPlayerChat(player)
+end)
+
+-- 手机端优化
+if UserInputService.TouchEnabled then
+    -- 增大按钮尺寸
+    CloseButton.Size = UDim2.new(0.4, 0, 0.8, 0)
+    NotifyButton.Size = UDim2.new(0.4, 0, 0.8, 0)
+    SendButton.Size = UDim2.new(0.9, 0, 0.25, 0)
+    HideButton.Size = UDim2.new(0.08, 0, 0.12, 0)
+    
+    -- 增大字体
+    CloseButton.TextSize = 18
+    NotifyButton.TextSize = 18
+    SendButton.TextSize = 18
+    MessageInput.TextSize = 18
+    HideButton.TextSize = 20
+    
+    -- 增大聊天消息字体
+    ChatScroller.ChildAdded:Connect(function(child)
+        if child:IsA("Frame") and child:FindFirstChild("MessageLabel") then
+            child.MessageLabel.TextSize = 16
+            child.NameLabel.TextSize = 16
+        end
+    end)
+end
