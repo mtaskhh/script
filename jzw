@@ -1,0 +1,179 @@
+getgenv().AntiAFK = game:GetService("Players").LocalPlayer.Idled:Connect(function()
+    local vu = game:GetService("VirtualUser")
+    vu:Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+    wait(1)
+    vu:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+end)
+
+game:GetService("StarterGui"):SetCore("SendNotification",{ Title = "挽脚本"; Text ="已开启反挂机"; Icon = "rbxassetid://105677776902677"; Duration = 3; })
+
+game:GetService("StarterGui"):SetCore("SendNotification",{ Title = "挽提示"; Text ="请勿与别的缝合对比"; Icon = "rbxassetid://105677776902677"; Duration = 3; })
+
+game:GetService("StarterGui"):SetCore("SendNotification",{ Title = "挽"; Icon = "rbxassetid://105677776902677"; Text ="请等待1-20秒加载时间"; Duration = 5; })
+
+
+local LBLG = Instance.new("ScreenGui")
+local LBL = Instance.new("TextLabel")
+local PlayerLabel = Instance.new("TextLabel")
+local player = game.Players.LocalPlayer
+
+LBLG.Name = "LBLG"
+LBLG.Parent = game.CoreGui
+LBLG.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+LBLG.Enabled = true
+
+LBL.Name = "LBL"
+LBL.Parent = LBLG
+LBL.BackgroundColor3 = Color3.new(1, 1, 1)
+LBL.BackgroundTransparency = 1
+LBL.BorderColor3 = Color3.new(0, 0, 0)
+LBL.Position = UDim2.new(0, 5, 0, 10)
+LBL.Size = UDim2.new(0, 250, 0, 35)
+LBL.Font = Enum.Font.GothamSemibold
+LBL.Text = "时间:加载中..."
+LBL.TextColor3 = Color3.new(1, 1, 1)
+LBL.TextScaled = false
+LBL.TextSize = 22
+LBL.TextWrapped = false
+LBL.Visible = true
+LBL.TextXAlignment = Enum.TextXAlignment.Left
+LBL.TextYAlignment = Enum.TextYAlignment.Top
+LBL.ZIndex = 10
+
+PlayerLabel.Name = "PlayerNameDisplay"
+PlayerLabel.Parent = LBLG
+PlayerLabel.Text = "挽脚本用户: " .. game.Players.LocalPlayer.DisplayName
+PlayerLabel.TextSize = 18
+PlayerLabel.Size = UDim2.new(0, 250, 0, 30)
+PlayerLabel.Position = UDim2.new(1, -255, 0, 25)
+PlayerLabel.BackgroundTransparency = 1
+PlayerLabel.TextXAlignment = Enum.TextXAlignment.Right
+PlayerLabel.TextYAlignment = Enum.TextYAlignment.Top
+PlayerLabel.ZIndex = 10
+PlayerLabel.Font = Enum.Font.GothamSemibold
+PlayerLabel.TextColor3 = Color3.new(1, 1, 1)
+
+LBL.TextSize = 18
+LBL.Size = UDim2.new(0, 250, 0, 30)
+LBL.Position = UDim2.new(1, -255, 0, 10)
+LBL.TextXAlignment = Enum.TextXAlignment.Right
+
+local Heartbeat = game:GetService("RunService").Heartbeat
+local LastIteration, Start
+local FrameUpdateTable = { }
+
+local function HeartbeatUpdate()
+    LastIteration = tick()
+    for Index = #FrameUpdateTable, 1, -1 do
+        FrameUpdateTable[Index + 1] = (FrameUpdateTable[Index] >= LastIteration - 1) and FrameUpdateTable[Index] or nil
+    end
+    FrameUpdateTable[1] = LastIteration
+    local CurrentFPS = (tick() - Start >= 1 and #FrameUpdateTable) or (#FrameUpdateTable / (tick() - Start))
+    CurrentFPS = CurrentFPS - CurrentFPS % 1
+    
+    local hue = tick() % 2 / 2
+    local r = math.sin(hue * 6.28 + 0) * 127 + 128
+    local g = math.sin(hue * 6.28 + 2) * 127 + 128
+    local b = math.sin(hue * 6.28 + 4) * 127 + 128
+    local color = Color3.fromRGB(r, g, b)
+    
+    LBL.Text = ("北京时间:"..os.date("%H").."时"..os.date("%M").."分"..os.date("%S"))
+    LBL.TextColor3 = color
+    PlayerLabel.TextColor3 = color
+end
+Start = tick()
+Heartbeat:Connect(HeartbeatUpdate)
+
+local ESPLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/mstudio45/MSESP/refs/heads/main/source.luau"))()
+
+local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
+
+local Window = WindUI:CreateWindow({
+    Title = "挽",
+    Icon = "code",
+    Author = "by挽＆MT",
+    Folder = "mtaskh",
+    Size = UDim2.fromOffset(850, 950),
+    Theme = "Light",
+    HideSearchBar = false,
+    ScrollBarEnabled = true,
+    Resizable = true,
+    Background = "https://raw.githubusercontent.com/mtaskhh/script/refs/heads/Other/retouch_2025101321572104.jpg",
+    Transparent = true,
+    BackgroundImageTransparency = 0.5,
+    User = {
+    Enabled = true,
+    Callback = function()
+        WindUI:Notify({
+            Title = "点击了自己",
+            Content = "是的,你很好看", 
+            Duration = 3,
+            Icon = "sun"
+        })
+    end,
+    Anonymous = false
+}
+})
+
+Window:SetBackgroundImageTransparency(0.5)
+
+Window:CreateTopbarButton("ThemeToggle", "moon", function()
+    local currentTheme = WindUI:GetCurrentTheme()
+    if currentTheme == "Light" then
+        WindUI:SetTheme("Dark")
+        WindUI:Notify({
+            Title = "已切换为光亮黑暗主题",
+            Content = "",
+            Duration = 3,
+            Icon = "geist:moon"
+        })
+    else
+        WindUI:SetTheme("Light")
+        WindUI:Notify({
+            Title = "已切换为光亮主题",
+            Content = "",
+            Duration = 3,
+            Icon = "geist:sun"
+        })
+    end
+end, 990)
+
+WindUI:SetNotificationLower(true)
+
+Window:EditOpenButton({
+    Title = "打开挽脚本",
+    Icon = "lucide:scroll-text",
+    CornerRadius = UDim.new(0,16),
+    StrokeThickness = 6,
+    Color = ColorSequence.new(
+Color3.fromHex("ADD8E6"),
+Color3.fromHex("FFFFFF")
+    ),
+    OnlyMobile = false,
+    Enabled = true,
+    Draggable = true,
+})
+
+Window:SelectTab(2)
+
+--================标签页栏目=================✨⭐🌟✨💫✨🌟⭐🌙
+
+local infoTab = Window:Tab({Title = "信息", Icon = "user", Locked = false})
+
+local DefaultTab = Window:Tab({Title = "公告", Icon = "geist:credit-card", Locked = false})
+
+local firstTab = Window:Tab({Title = "通用类", Icon = "settings", Locked = false})
+
+local thirdTab = Window:Tab({Title = "视觉类", Icon = "eye", Locked = false})
+
+local secondTab = Window:Tab({Title = "自瞄范围类", Icon = "target", Locked = false})
+
+local TeleportTab = Window:Tab({Title = "传送与甩飞", Icon = "lucide:move-3d"})
+
+local SpinTab = Window:Tab({Title = "旋转", Icon = "rotate-cw", Locked = false})
+
+local serve1 = Window:Tab({Title = "服务器列表1", Icon = "book", Locked = false})
+
+local FETab = Window:Tab({Title = "FE脚本", Icon = "lucide:zap"})
+
+local MusicTab = Window:Tab({Title = "音乐播放器", Icon = "music", Locked = false})
